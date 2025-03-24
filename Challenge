@@ -1,0 +1,63 @@
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+
+public class Challenge {
+    public static void main(String[] args) {
+
+       
+        Function<Product, Double> finalPrice = product -> product.price * (1 - product.desc);
+
+        
+        UnaryOperator<Double> municipalTax = price -> price >= 2500 ? price * 1.085 : price;
+
+        
+        UnaryOperator<Double> freight = price -> price >= 3000 ? price + 100 : price + 50;
+
+       
+        UnaryOperator<Double> round = price -> Double.parseDouble(String.format("%.2f", price));
+
+       
+        Function<Double, String> format = price -> ("R$" + price).replace(".", ",");
+
+       
+        Product p = new Product("Ipad", 3235.89, 0.13);
+
+        
+        String price = finalPrice
+                .andThen(municipalTax)
+                .andThen(freight)
+                .andThen(round)
+                .andThen(format)
+                .apply(p);
+
+        
+        System.out.println("The final price is " + price);
+    }
+
+   
+    public static class Product {
+        String name;
+        Double price;
+        Double desc;
+
+        
+        public Product(String name, Double price, Double desc) {
+            this.name = name;
+            this.price = price;
+            this.desc = desc;
+        }
+
+       
+        public String getName() {
+            return name;
+        }
+
+        public Double getPrice() {
+            return price;
+        }
+
+        public Double getDesc() {
+            return desc;
+        }
+    }
+}
